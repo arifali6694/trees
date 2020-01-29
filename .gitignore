@@ -1,0 +1,10 @@
+build*
+xcode
+build.make
+build.xcode
+debug
+debug.make
+debug.xcode
+android
+.DS_Store
+.vscode
