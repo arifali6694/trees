@@ -2,16 +2,12 @@
 #include <vector>
 
 int main(){
-    BST<int> b; //initialize tree root 
-    std::vector<double> vec {0,3,50,35,28,41,78,66,84,100};
-    //std::vector<double>::iterator ;
+    BST<int> b; //initialize tree
 
-    for (auto& k : vec){b.Insert(k);}
-
-    /*
-    "auto" = vector<double>::iterator
-    for(auto it = vec.begin(); it < vec.end; ++it) {
-        //
+    std::vector<double> vec {0,3,3,50,35,28,41,78,66,84,100};
+    std::vector<double>::iterator itVec;
+    for (itVec = vec.begin(); itVec != vec.end(); ++itVec){
+        b.Insert(*itVec);
     }
     */
     b.Inorder(b.root);
