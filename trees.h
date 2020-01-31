@@ -1,74 +1,77 @@
 #include <iostream>
+#include <optional>
 
+// so clean :D
 template <typename T>
-struct Node{
-    Node(T value) : data(value), left(nullptr), right(nullptr) {}
-    T data;
-    Node<T>* left;
-    Node<T>* right;
-    private:
-    // std::unique_ptr<node<T>>
-    // ...
+class BST {
+public:
+    BST() : m_root(nullptr){};
+    // ~BST(); if using raw pointers we need to clean up :)
+
+    // From the users standpoint they just want to
+    // insert something in the tree. They DO NOT
+    // want to be fussing with pointers
+    void insert(T);
+    void inorder();
+    //    std::optional<T> search(T);
+
+private:
+    // who else wants this?!
+    // if you are going to balance this tree it will be storing
+    // extra information which would be useless to other variations
+    // of trees.
+    struct Node {
+        Node(T value) : data(value), left(nullptr), right(nullptr) {}
+        T data;
+        Node* left;
+        Node* right;
+    };
+
+    // private implmentation functions
+    Node* insert(Node* node, T val);
+    void inorder(Node* node);
+
+    Node* m_root;  // root node
 };
 
 template <typename T>
-struct BST{
-    BST(){};
-    Node<T>* Insert(T);
-    Node<T>* Insert(Node<T>*, T);
-    void Inorder(Node<T>*);
-    Node<T>* search(T);
-    Node<T>* search(Node<T>*, T);
-    Node<T>* root= nullptr; //root node
-    private:
-};
+void BST<T>::insert(T value) {
+    if (!m_root) {
+        m_root = new Node(value);
+        return;
+    }
 
-template <typename T>
-Node<T>* BST<T>::Insert(T value){
-    if (!root){root = new Node<T>(value);return root;} // If root is NULL, insert root node
-    if (value > root->data){root->right = Insert(root->right, value);}
-    else{root->left = Insert(root->left, value);}
-    return root;
+    if (value > m_root->data) {
+        m_root->right = insert(m_root->right, value);
+    } else {
+        m_root->left = insert(m_root->left, value);
+    }
 }
 
 template <typename T>
-Node<T>* BST<T>::Insert(Node<T>* node, T value){
-    if (!node){return new Node<T>(value);}
-    if (value > node->data){node->right = Insert(node->right, value);}
-    else{node->left = Insert(node->left, value);}
-    return node;
+typename BST<T>::Node* BST<T>::insert(Node* node, T val) {
+    if (!node) {
+        return new Node(val);
+    }
+    if (val > node->data) {
+        return insert(node->right, val);
+    } else {
+        return insert(node->left, val);
+    }
 }
 
 template <typename T>
-void BST<T>::Inorder(Node<T>* node){
-    if (!node){return;}
-    Inorder(node->left);
+void BST<T>::inorder() {
+    inorder(m_root);
+}
+
+template <typename T>
+void BST<T>::inorder(Node* node) {
+    if (!node) {
+        return;
+    }
+    inorder(node->left);
     std::cout << node->data << std::endl;
-    Inorder(node->right);
+    inorder(node->right);
 }
 
-template <typename T>
-Node<T>* BST<T>::search(T key){
-    if (root != nullptr && root->data == key){
-        std::cout << "Node "<< key<< " at address :" << root << std::endl;
-        return root;}
-    if (root == nullptr){
-        std::cout<< key << " key not found" <<std::endl;
-        return nullptr;}
-    if (root->data < key){
-        return search(root->right, key);}
-    return search(root->left, key);
-}
-
-template <typename T>
-Node<T>* BST<T>::search(Node<T>* node,T key){
-    if (node != nullptr && node->data == key){
-        std::cout << "Node "<< key<< " at address :" << node << std::endl;
-        return node;}
-    if (node == nullptr){
-        std::cout<< "Node "<< key << " not found" <<std::endl;
-        return nullptr;}
-    if (node->data < key){
-        return search(node->right, key);}
-    return search(node->left, key);
-}
