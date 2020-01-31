@@ -10,7 +10,7 @@ int main(){
         b.Insert(*itVec);
     }
 
-    b.Inorder(b.root);
+    b.Inorder();
     std::cout<<b.search(3)<<std::endl;
     std::cout<<b.search(4)<<std::endl;
     return 0;

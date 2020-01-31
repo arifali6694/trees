@@ -6,9 +6,10 @@ struct Node{//structs pulic by default
     T data;
     bool Insert(T);
     bool search(T);
+    void Inorder();
+    private:
     Node<T>* left;  //private
     Node<T>* right; //private
-    private:
     // std::unique_ptr<node<T>>
     // ...
 };
@@ -18,10 +19,10 @@ class BST{
     public:
     BST(){};
     bool Insert(T);
-    void Inorder(Node<T>*);  //> void Inorder();
     bool search(T);
-    Node<T>* root = nullptr; //private for Inorder();
+    void Inorder();  //> void Inorder();
     private:
+    Node<T>* root = nullptr;
     //Node<T>* Insert(T);
     //Node<T>* Insert(Node<T>*, T);
     //Node<T>* search(Node<T>*, T);
@@ -34,7 +35,7 @@ bool BST<T>::Insert(T key){
         root = new Node<T>(key);
         return true;
     }
-    return root->Insert(key); // != nullptr;
+    return root->Insert(key);
 }
 
 template <typename T>
@@ -57,11 +58,21 @@ bool Node<T>::Insert(T key){
 }
 
 template <typename T>
-void BST<T>::Inorder(Node<T>* node){
-    if (!node){return;}
-    Inorder(node->left);
-    std::cout << node->data << std::endl;
-    Inorder(node->right);
+void BST<T>::Inorder(){
+    if (root == nullptr){
+        return;
+    }
+    root->Inorder();
+}
+
+template <typename T>
+void Node<T>::Inorder(){
+    if (this ==nullptr){
+        return;
+        }
+    left->Inorder();
+    std::cout << data << std::endl;
+    right->Inorder();
 }
 
 template <typename T>
@@ -70,17 +81,17 @@ bool BST<T>::search(T key){
         //std::cout<< key << " key not found" <<std::endl;
         return false;
     }
-    return root->search(key);// != nullptr;
+    return root->search(key);
 }
 
 template <typename T>
 bool Node<T>::search(T key){
     if (data == NULL){
-        return false;//nullptr;
+        return false;
     }
     if (data == key){
         //std::cout << "Node "<< key<< " at address :" << this << std::endl;
-        return true; //this;
+        return true;
     }
     if (data < key){
         return right->search(key);
