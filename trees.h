@@ -1,5 +1,6 @@
 #include <iostream>
 #include <optional>
+#include <memory>
 
 // so clean :D
 template <typename T>
@@ -23,40 +24,41 @@ private:
     struct Node {
         Node(T value) : data(value), left(nullptr), right(nullptr) {}
         T data;
-        Node* left;
-        Node* right;
+        std::unique_ptr<Node> left;
+        std::unique_ptr<Node> right;
     };
 
     // private implmentation functions
-    Node* insert(Node* node, T val);
-    void inorder(Node* node);
+    void insert(std::unique_ptr<Node>& node, T val);
+    void inorder(std::unique_ptr<Node>& node);
 
-    Node* m_root;  // root node
+    std::unique_ptr<Node> m_root;  // root node
 };
 
 template <typename T>
 void BST<T>::insert(T value) {
     if (!m_root) {
-        m_root = new Node(value);
+        m_root = std::make_unique<Node>(value);
         return;
     }
 
     if (value > m_root->data) {
-        m_root->right = insert(m_root->right, value);
+        insert(m_root->right, value);
     } else {
-        m_root->left = insert(m_root->left, value);
+        insert(m_root->left, value);
     }
 }
 
 template <typename T>
-typename BST<T>::Node* BST<T>::insert(Node* node, T val) {
+void BST<T>::insert(std::unique_ptr<Node>& node, T val) {
     if (!node) {
-        return new Node(val);
+        node = std::make_unique<Node>(val);
+        return;
     }
     if (val > node->data) {
-        return insert(node->right, val);
+        insert(node->right, val);
     } else {
-        return insert(node->left, val);
+        insert(node->left, val);
     }
 }
 
@@ -66,7 +68,7 @@ void BST<T>::inorder() {
 }
 
 template <typename T>
-void BST<T>::inorder(Node* node) {
+void BST<T>::inorder(std::unique_ptr<Node>& node) {
     if (!node) {
         return;
     }
